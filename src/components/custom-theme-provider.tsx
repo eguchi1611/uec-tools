@@ -9,12 +9,14 @@ import {
   useState,
 } from "react";
 
-const ColorModeContext = createContext({
-  setColorMode: (mode: ColorMode) => {},
-});
+type ColorModeContextType = {
+  setColorMode: (mode: ColorMode) => void;
+} | null;
 
-export function CustomThemeProvider({ children }: PropsWithChildren) {
-  const [mode, setMode] = useState<ColorMode>("system");
+const ColorModeContext = createContext<ColorModeContextType>(null);
+
+export function CustomThemeProvider(props: PropsWithChildren) {
+  const [mode, setMode] = useState<ColorMode>("light");
 
   const setColorMode = useCallback((mode: ColorMode) => {
     setMode(mode);
@@ -40,12 +42,16 @@ export function CustomThemeProvider({ children }: PropsWithChildren) {
 
   return (
     <ColorModeContext.Provider value={{ setColorMode }}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
     </ColorModeContext.Provider>
   );
 }
 
 export function useSetColorMode() {
-  const setColorMode = useContext(ColorModeContext);
-  return setColorMode;
+  const context = useContext(ColorModeContext);
+  if (context === null) {
+    throw "CustomThemeProviderでラップしてください";
+  }
+
+  return context.setColorMode;
 }

@@ -1,5 +1,7 @@
+import StudentNumberBarcode from "@/features/student-number-barcode/components/student-number-barcode";
 import { Button } from "@mui/material";
 import Head from "next/head";
+import Link from "next/link";
 
 export default function IndexPage() {
   return (
@@ -11,7 +13,12 @@ export default function IndexPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Button variant="contained" size="large">
+        <Button
+          component={Link}
+          href="/student-number-barcode"
+          variant="contained"
+          size="large"
+        >
           Index Page
         </Button>
       </div>
